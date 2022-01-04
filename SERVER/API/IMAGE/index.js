@@ -1,7 +1,8 @@
-import express from "express";
+import express, { Router } from "express";
 import AWS from "aws-sdk";
 import multer from "multer";
 import { ImageModel } from "../../Database/image";
+import { s3Upload } from "../../UTILS/AWS/s3";
 
 const router = express.Router();
 
@@ -18,3 +19,21 @@ access       public
 method       POST
 */
 
+Router.post("/", upload.single("file"), async(req,res)=>{
+    try {
+        const file = req.file;
+        const bucketOptions = {
+            Bucket: "pdzomatomaster",
+            Key: file.originalname,
+            Body: file.buffer,
+            ContentType: file.mimetype,
+            ACL: "public-read" 
+        };
+        const uploadImage = await s3Upload(bucketOptions);
+        return res.status(200).json({uploadImage});
+    } catch (error) {
+        return res.status(500).json({error: error.message});
+    }
+});
+
+export default Router;
