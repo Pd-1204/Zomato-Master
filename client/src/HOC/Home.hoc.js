@@ -1,8 +1,7 @@
 import React from "react";
 import {Route} from "react-router-dom";
-import temp from "../Components/temp";
-
 import HomeLayout from "../Layout/Home.layout";
+
 
 const HomeHOC = ({ component: Component , ...rest }) => {
     return (
